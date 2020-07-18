@@ -1,0 +1,27 @@
+﻿  Source.cpp
+D:\timmy\Documents\Platformer\Platformer\Editor.h(65,25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\timmy\Documents\Platformer\Platformer\Editor.h(65,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\timmy\Documents\Platformer\Platformer\Editor.h(144,25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\timmy\Documents\Platformer\Platformer\Editor.h(144,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\timmy\Documents\Platformer\Platformer\Editor.h(423,24): warning C4018: '<': signed/unsigned mismatch
+D:\timmy\Documents\Platformer\Platformer\Editor.h(454,21): warning C4018: '<': signed/unsigned mismatch
+D:\timmy\Documents\Platformer\Platformer\Editor.h(471,21): warning C4018: '<': signed/unsigned mismatch
+D:\timmy\Documents\Platformer\Platformer\Editor.h(488,21): warning C4018: '<': signed/unsigned mismatch
+D:\timmy\Documents\Platformer\Platformer\Editor.h(505,21): warning C4018: '<': signed/unsigned mismatch
+D:\timmy\Documents\Platformer\Platformer\Editor.h(522,21): warning C4018: '<': signed/unsigned mismatch
+D:\timmy\Documents\Platformer\Platformer\Source.cpp(25,65): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\timmy\Documents\Platformer\Platformer\Source.cpp(27,60): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\timmy\Documents\Platformer\Platformer\Source.cpp(27,47): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+  Platformer.vcxproj -> D:\timmy\Documents\Platformer\Debug\Platformer.exe
