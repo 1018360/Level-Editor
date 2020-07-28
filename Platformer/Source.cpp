@@ -1,14 +1,69 @@
 #include "Editor.h"
+#include "MenuHeader.h"
+#include "WindowHeader.h"
 
 int main()
 {
 	EditorClass myEditor;
-	if (!myEditor.Start())
+	MainMenu myMainMenu;
+	MainRenderWindow mainWindow;
+	
+	mainWindow.window.create(sf::VideoMode(mainWindow.windowWidth, mainWindow.windowHeight), "My Program", sf::Style::Titlebar | sf::Style::Close);
+
+	while (mainWindow.window.isOpen())
 	{
-		return EXIT_FAILURE;
+		sf::Event event;
+		while (mainWindow.window.pollEvent(event))
+		{
+			switch (event.type)
+			{
+			case sf::Event::Closed:
+				mainWindow.close();
+				break;
+			}
+		}
+		switch (myMainMenu.myMode.currentMode)
+		{
+		case mode::MainMenu:
+			if (!myMainMenu.Start())
+			{
+				return EXIT_FAILURE;
+			}
+			myMainMenu.Update(mainWindow);
+			break;
+		case mode::Editor:
+			if (!myEditor.editorActive)
+			{
+				if (!myEditor.Start(mainWindow))
+				{
+					return EXIT_FAILURE;
+				}
+			}
+			myEditor.Update(mainWindow);
+			break;
+		default:
+			break;
+		}
 	}
-	return myEditor.Update();
+	
 	return 0;
+}
+
+bool MainMenu::Start()
+{
+	return true;
+}
+
+void MainMenu::Update(MainRenderWindow& mainWindow)
+{
+	while (menuActive)
+	{
+		mainWindow.worldPos = mainWindow.window.mapPixelToCoords(sf::Mouse::getPosition(mainWindow.window));
+		levelEditorButton.checkClick(std::bind(&MainMenu::ChangeMode, this, mode::Editor), mainWindow.worldPos);
+		mainWindow.clear();
+		mainWindow.window.draw(levelEditorButton);
+		mainWindow.window.display();
+	}
 }
 
 EditorClass::EditorClass()
@@ -19,15 +74,13 @@ EditorClass::EditorClass()
 	}
 }
 
-bool EditorClass::Start()
+bool EditorClass::Start(MainRenderWindow &mainWindow)
 {
 	//setup our views
-	toolsView = sf::View(sf::FloatRect(0, 0, windowWidth * 0.045f, windowHeight));
+	toolsView = sf::View(sf::FloatRect(0, 0, mainWindow.windowWidth * 0.045f, mainWindow.windowHeight));
 	toolsView.setViewport(sf::FloatRect(0, 0, 0.045f, 1));
-	levelEditView = sf::View(sf::FloatRect(0, 0, windowWidth, windowHeight));
+	levelEditView = sf::View(sf::FloatRect(0, 0, mainWindow.windowWidth, mainWindow.windowHeight));
 	levelEditView.setViewport(sf::FloatRect(0.03f, 0, 1, 1));
-	//setup the window!
-	window.create(sf::VideoMode(windowWidth, windowHeight), "Level Editor", sf::Style::Titlebar | sf::Style::Close);
 
 	//setup variables to paint with
 	curTileType = Tile::Type::Platform;
@@ -52,38 +105,26 @@ bool EditorClass::Start()
 	{
 		for (int j = 0; j < y; j++)
 		{
-			tile[i][j].init(i * 32 + ((windowWidth / 2) - ((32 * x) / 2)), j * 32);
+			tile[i][j].init(i * 32 + ((mainWindow.windowWidth / 2) - ((32 * x) / 2)), j * 32);
 		}
 	}
-
+	editorActive = true;
 	return true;
 }
 
-int EditorClass::Update()
+void EditorClass::Update(MainRenderWindow &mainWindow)
 {
-	//editorLoop
-	while (window.isOpen())
-	{ 
-		sf::Event event;
-	while (window.pollEvent(event))
-	{
-		switch (event.type)
-		{
-		case sf::Event::Closed:
-			window.close();
-			break;
-		}
-	}
 	
 	//prep window for displaying stuff
-	window.clear(sf::Color::White);
-	window.setView(toolsView);
+	mainWindow.window.clear(sf::Color::White);
+	mainWindow.window.setView(toolsView);
 	//track mouse pos
-	worldPos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+	worldPos = mainWindow.window.mapPixelToCoords(sf::Mouse::getPosition(mainWindow.window));
 
 	//bind our save/load buttons to save/load functions
-	tools.saveButton.checkClick(std::bind(&EditorClass::save, this, tile), worldPos);
-	tools.loadButton.checkClick(std::bind(&EditorClass::load, this, tile), worldPos);
+	tools.saveButton.checkClick(std::bind(&EditorClass::save, this, playerInput, tile), worldPos);
+	tools.loadButton.checkClick(std::bind(&EditorClass::load, this, playerInput, tile), worldPos);
+
 	//loop through our toolbar to check for clicks
 	for (int i = 0; i < 9; i++)
 	{
@@ -110,12 +151,12 @@ int EditorClass::Update()
 			tileButton[i].sprite.setScale(sf::Vector2f(1.f, 1.f));
 			tileButton[i].actor.sprite.setScale(sf::Vector2f(1.f, 1.f));
 		}
-		window.draw(tileButton[i]);
+		mainWindow.window.draw(tileButton[i]);
 	}
 
-	window.draw(tools);
-	window.setView(levelEditView);
-	worldPos = window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getView());
+	mainWindow.window.draw(tools);
+	mainWindow.window.setView(levelEditView);
+	worldPos = mainWindow.window.mapPixelToCoords(sf::Mouse::getPosition(mainWindow.window), mainWindow.window.getView());
 
 	//draw our tiles
 	for (int i = 0; i < x; i++)
@@ -135,11 +176,28 @@ int EditorClass::Update()
 				}
 			}
 			tile[i][j].RefreshTile();
-			window.draw(tile[i][j]);
+			mainWindow.window.draw(tile[i][j]);
 		}
 	}
 
-	window.display();
+	sf::Event event;
+	while (mainWindow.window.pollEvent(event))
+	{
+		if (event.type == sf::Event::TextEntered)
+		{
+			if (event.text.unicode == 8 && playerInput.size() != 0)
+			{
+				playerInput.pop_back();
+				std::cout << playerInput << std::endl;
+			}
+			else if (event.text.unicode < 128)
+			{
+				playerInput += static_cast<char>(event.text.unicode);
+				std::cout << playerInput << std::endl;
+			}
+			inputField.text.setString(playerInput);
+		}
 	}
-	return 0;
+	mainWindow.window.draw(inputField);
+	mainWindow.window.display();
 }
