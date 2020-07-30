@@ -1,11 +1,34 @@
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECIATION_WARNING //VS2109
 #include "Editor.h"
 #include "MenuHeader.h"
 #include "WindowHeader.h"
+#include "Game.h"
+#include <experimental/filesystem>
 
+namespace fs = std::experimental::filesystem;
+
+std::vector<std::string> saves;
+int curLevel = 0;
+void GetAllSaveFiles()
+{
+	std::string path = "\.";
+	std::string ext = ".sav";
+	saves.clear();
+	for (auto& p : fs::recursive_directory_iterator(path))
+	{
+		if (p.path().extension() == ext)
+		{
+			std::cout << p.path().filename().generic_string() << '\n';
+			std::string file = p.path().filename().generic_string();
+			saves.push_back(file);
+		}
+	}
+}
 int main()
 {
 	EditorClass myEditor;
 	MainMenu myMainMenu;
+	GameClass myGame;
 	MainRenderWindow mainWindow;
 	
 	mainWindow.window.create(sf::VideoMode(mainWindow.windowWidth, mainWindow.windowHeight), "My Program", sf::Style::Titlebar | sf::Style::Close);
@@ -22,6 +45,7 @@ int main()
 				break;
 			}
 		}
+
 		switch (myMainMenu.myMode.currentMode)
 		{
 		case mode::MainMenu:
@@ -40,6 +64,15 @@ int main()
 				}
 			}
 			myEditor.Update(mainWindow);
+			break;
+		case mode::Game:
+			if (!myGame.gameActive)
+			{
+				if (!myGame.Start(mainWindow))
+				{
+					return EXIT_FAILURE;
+				}
+			}
 			break;
 		default:
 			break;
@@ -199,5 +232,111 @@ void EditorClass::Update(MainRenderWindow &mainWindow)
 		}
 	}
 	mainWindow.window.draw(inputField);
+	mainWindow.window.display();
+}
+
+bool GameClass::Start(MainRenderWindow& mainWindow)
+{
+	GetAllSaveFiles();
+	//setup of game, init tiles
+	for (int i = 0; i < x; i++)
+	{
+		for (int j = 0; j < y; j++)
+		{
+			tile[i][j].init(i * 32 + ((mainWindow.windowWidth / 2) - ((32 * x) / 2)), j * 32);
+		}
+	}
+	//load save file
+	if (saves.size() != 0)
+	{
+		LoadLevel(saves[curLevel], tile);
+	}
+	else
+	{
+		std::cout << "Error, no saved levels!" << std::endl;
+	}
+
+	player.nextPos = player.getPosition();
+	gameActive = true;
+	return true;
+}
+
+void GameClass::Update(MainRenderWindow& mainWindow)
+{
+	mainWindow.window.clear(sf::Color::White);
+	deltaTime = clock.restart().asSeconds();
+	//Controls!
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	{
+		//move right
+		if (player.isGrounded)
+		{
+			player.velocity.x += player.speed * deltaTime;
+			player.velocity.y += deltaTime;
+		}
+		else
+		{
+			player.velocity.x += player.speed / 3 * deltaTime;
+		}
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	{
+		//move left
+		if (player.isGrounded)
+		{
+			player.velocity.x -= player.speed * deltaTime;
+			player.velocity.y += deltaTime;
+		}
+		else
+		{
+			player.velocity.x -= player.speed / 3 * deltaTime;
+		}
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	{
+		//jump
+		if (player.isGrounded)
+		{
+			player.isGrounded = false;
+			player.velocity.y += -player.jumpSpeed + deltaTime;
+		}
+	}
+
+	//friction
+	if (player.isGrounded)
+	{
+		if (!player.isAnyKeyPressed())
+		{
+			player.velocity.x -= friction * deltaTime * (sign(player.velocity.x));
+		}
+	}
+
+	//maximum abs velcoity
+	if (abs(player.velocity.x) > 0.6f)
+	{
+		player.velocity.x = 0.6f * sign(player.velocity.x);
+	}
+	//max vertical velocity
+	if (player.velocity.y < 1.0f)
+	{
+		player.velocity.y += gravity * deltaTime;
+	}
+	else if (player.velocity.y < -1.0f)
+	{
+		player.velocity.y = -1.0f;
+	}
+
+	//this is the players next potential position, if they arent obstructed
+	player.nextPos = player.getPosition() + player.velocity;
+	//project a hitbox
+	player.nextRect = sf::FloatRect(player.nextPos, sf::Vector2f(32.f, 32.f));
+	player.isGrounded = false;
+	//loop for collision with tiles as well as drawing them
+	//for(int....
+
+	//set player position
+	player.setPosition(player.nextPos);
+	//draw
+	mainWindow.window.draw(player);
 	mainWindow.window.display();
 }
