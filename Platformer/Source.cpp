@@ -1,4 +1,4 @@
-#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECIATION_WARNING //VS2109
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING //VS2109
 #include "Editor.h"
 #include "MenuHeader.h"
 #include "WindowHeader.h"
@@ -73,6 +73,7 @@ int main()
 					return EXIT_FAILURE;
 				}
 			}
+			myGame.Update(mainWindow);
 			break;
 		default:
 			break;
@@ -93,8 +94,10 @@ void MainMenu::Update(MainRenderWindow& mainWindow)
 	{
 		mainWindow.worldPos = mainWindow.window.mapPixelToCoords(sf::Mouse::getPosition(mainWindow.window));
 		levelEditorButton.checkClick(std::bind(&MainMenu::ChangeMode, this, mode::Editor), mainWindow.worldPos);
+		gameButton.checkClick(std::bind(&MainMenu::ChangeMode, this, mode::Game), mainWindow.worldPos);
 		mainWindow.clear();
 		mainWindow.window.draw(levelEditorButton);
+		mainWindow.window.draw(gameButton);
 		mainWindow.window.display();
 	}
 }
@@ -268,6 +271,7 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 	//Controls!
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 	{
+		
 		//move right
 		if (player.isGrounded)
 		{
@@ -332,8 +336,159 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 	player.nextRect = sf::FloatRect(player.nextPos, sf::Vector2f(32.f, 32.f));
 	player.isGrounded = false;
 	//loop for collision with tiles as well as drawing them
-	//for(int....
+	for (int i = 0; i < x; i++)
+	{
+		for (int j = 0; j < y; j++)
+		{
+			//draw tiles
+			tile[i][j].RefreshTile();
+			mainWindow.window.draw(tile[i][j]);
 
+			//check for collisions
+			if (tile[i][j].type == Tile::Type::Platform)
+			{
+				Collision pcol = player.CollisionCheck(tile[i][j].sprite.getGlobalBounds());
+				if (pcol.hit)
+				{
+					//hit something vertically
+					if (pcol.dir.x == 0)
+					{
+						//hitting the tile below us
+						if (pcol.dir.y >= 0.0f)
+						{
+							//we're on top of the tile
+							player.nextPos.y = tile[i][j].sprite.getGlobalBounds().top - 32 - 0.1f;
+							player.isGrounded = true;
+						}
+						else
+						{
+							//instead of using 32 we should be getting the height of the sprite, incase sizes change
+							player.nextPos.y = tile[i][j].sprite.getGlobalBounds().top + 32 + 0.1f;
+							player.velocity.y = 0.0f;
+						}
+					}
+					else //horizontal hit
+					{
+						//right side of the tile?
+						if (pcol.dir.x >= 0.0f)
+						{
+							player.nextPos.x = tile[i][j].sprite.getGlobalBounds().left - 32;
+							player.velocity.x = 0.0f;
+						}
+						else
+						{
+							player.nextPos.x = tile[i][j].sprite.getGlobalBounds().left + 32;
+							player.velocity.x = 0.0f;
+						}
+					}
+				}
+			}
+			else if (tile[i][j].type == Tile::Type::Lava)
+			{
+				Collision pcol = player.CollisionCheck(tile[i][j].sprite.getGlobalBounds());
+				if (pcol.hit)
+				{
+					//remove a life
+					player.lives--;
+					//reset position
+					player.Respawn();
+					std::cout << "Player hit lava" << std::endl;
+					if (player.lives == 0)
+					{
+						//game over(todo - add gameover state/screen)
+						mainWindow.close();
+					}
+				}
+			}
+			else if (tile[i][j].actor.type == Actor::Type::Coin)
+			{
+				//add coin, then destroy the coin (changing type to none
+				Collision pcol = player.CollisionCheck(tile[i][j].actor.sprite.getGlobalBounds());
+				if (pcol.hit)
+				{
+					std::cout << "Player Grabbed Coin!" << std::endl;
+					player.coins++;
+					tile[i][j].actor.type = Actor::Type::None;
+					tile[i][j].RefreshTile();
+				}
+			}
+			else if (tile[i][j].actor.type == Actor::Type::Spike)
+			{
+				Collision pcol = player.CollisionCheck(tile[i][j].actor.sprite.getGlobalBounds());
+				if (pcol.hit)
+				{
+					//remove life
+					player.lives--;
+					//reset position
+					player.Respawn();
+					std::cout << "Player hit spike" << std::endl;
+					if (player.lives == 0)
+					{
+						//transition to our game over screen
+						mainWindow.close();
+					}
+				}
+			}
+			else if (tile[i][j].actor.type == Actor::Type::Enemy)
+			{
+				Collision pcol = player.CollisionCheck(tile[i][j].actor.sprite.getGlobalBounds());
+				if (pcol.hit)
+				{
+					//hit something vertically
+					if (pcol.dir.x == 0)
+					{
+						//is the player hitting from above?
+						if (pcol.dir.y >= 0.0f)
+						{
+							//we're on top of the enemy
+							//kill enemy(this is temport code until we give a proper death state thing)
+							tile[i][j].actor.type = Actor::Type::None;
+							tile[i][j].RefreshTile();
+						}
+						else
+						{
+							//enemy above
+							player.lives--;
+							player.Respawn();
+							if (player.lives == 0)
+							{
+								//insert game over transition
+								mainWindow.close();
+							}
+						}
+					}
+					else //horizontal hit, instant death
+					{
+						player.lives--;
+						player.Respawn();
+						if (player.lives == 0)
+						{
+							//insert game over transition
+							mainWindow.close();
+						}
+					}
+				}
+			}
+			else if (tile[i][j].actor.type == Actor::Type::Exit)
+			{
+				Collision pcol = player.CollisionCheck(tile[i][j].actor.sprite.getGlobalBounds());
+				if (pcol.hit)
+				{
+					if (curLevel != saves.size() - 1)
+					{
+						curLevel++;
+						LoadLevel(saves[curLevel], tile);
+					}
+					else
+					{
+						//victory screen! todo make a you win! screen
+						mainWindow.close();
+					}
+				}
+			}
+		}
+	}
+	
 	//set player position
 	player.setPosition(player.nextPos);
 	//draw

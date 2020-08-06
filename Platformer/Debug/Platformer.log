@@ -1,4 +1,4 @@
-﻿  Source.cpp
+﻿  Game.cpp
 D:\timmy\Documents\Level Editor\Platformer\Editor.h(66,25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 D:\timmy\Documents\Level Editor\Platformer\Editor.h(66,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 D:\timmy\Documents\Level Editor\Platformer\Editor.h(145,25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
@@ -9,19 +9,48 @@ D:\timmy\Documents\Level Editor\Platformer\Editor.h(507,21): warning C4018: '<':
 D:\timmy\Documents\Level Editor\Platformer\Editor.h(524,21): warning C4018: '<': signed/unsigned mismatch
 D:\timmy\Documents\Level Editor\Platformer\Editor.h(541,21): warning C4018: '<': signed/unsigned mismatch
 D:\timmy\Documents\Level Editor\Platformer\Editor.h(558,21): warning C4018: '<': signed/unsigned mismatch
-D:\timmy\Documents\Level Editor\Platformer\Source.cpp(80,86): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+D:\timmy\Documents\Level Editor\Platformer\Game.cpp(44,23): warning C4018: '<': signed/unsigned mismatch
+D:\timmy\Documents\Level Editor\Platformer\Game.cpp(76,20): warning C4018: '<': signed/unsigned mismatch
+D:\timmy\Documents\Level Editor\Platformer\Game.cpp(93,20): warning C4018: '<': signed/unsigned mismatch
+D:\timmy\Documents\Level Editor\Platformer\Game.cpp(110,20): warning C4018: '<': signed/unsigned mismatch
+D:\timmy\Documents\Level Editor\Platformer\Game.cpp(127,20): warning C4018: '<': signed/unsigned mismatch
+D:\timmy\Documents\Level Editor\Platformer\Game.cpp(137,98): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-D:\timmy\Documents\Level Editor\Platformer\Source.cpp(82,81): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+D:\timmy\Documents\Level Editor\Platformer\Game.cpp(137,54): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-D:\timmy\Documents\Level Editor\Platformer\Source.cpp(82,57): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+D:\timmy\Documents\Level Editor\Platformer\Game.cpp(148,20): warning C4018: '<': signed/unsigned mismatch
+  Source.cpp
+D:\timmy\Documents\Level Editor\Platformer\Editor.h(66,25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\timmy\Documents\Level Editor\Platformer\Editor.h(66,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\timmy\Documents\Level Editor\Platformer\Editor.h(145,25): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\timmy\Documents\Level Editor\Platformer\Editor.h(145,22): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\timmy\Documents\Level Editor\Platformer\Editor.h(458,24): warning C4018: '<': signed/unsigned mismatch
+D:\timmy\Documents\Level Editor\Platformer\Editor.h(490,21): warning C4018: '<': signed/unsigned mismatch
+D:\timmy\Documents\Level Editor\Platformer\Editor.h(507,21): warning C4018: '<': signed/unsigned mismatch
+D:\timmy\Documents\Level Editor\Platformer\Editor.h(524,21): warning C4018: '<': signed/unsigned mismatch
+D:\timmy\Documents\Level Editor\Platformer\Editor.h(541,21): warning C4018: '<': signed/unsigned mismatch
+D:\timmy\Documents\Level Editor\Platformer\Editor.h(558,21): warning C4018: '<': signed/unsigned mismatch
+D:\timmy\Documents\Level Editor\Platformer\Source.cpp(14,21): warning C4129: '.': unrecognized character escape sequence
+D:\timmy\Documents\Level Editor\Platformer\Source.cpp(116,86): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
           with
           [
               T=float
           ]
+D:\timmy\Documents\Level Editor\Platformer\Source.cpp(118,81): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\timmy\Documents\Level Editor\Platformer\Source.cpp(118,57): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+  Generating Code...
   Platformer.vcxproj -> D:\timmy\Documents\Level Editor\Debug\Platformer.exe
