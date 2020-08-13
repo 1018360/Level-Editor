@@ -232,8 +232,9 @@ void EditorClass::Update(MainRenderWindow &mainWindow)
 				std::cout << playerInput << std::endl;
 			}
 			inputField.text.setString(playerInput);
-		}
+		}   
 	}
+	inputField.UpdatePos(sf::Vector2f(2, 52));
 	mainWindow.window.draw(inputField);
 	mainWindow.window.display();
 }
@@ -408,8 +409,7 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 				{
 					std::cout << "Player Grabbed Coin!" << std::endl;
 					player.coins++;
-					tile[i][j].actor.type = Actor::Type::None;
-					tile[i][j].RefreshTile();
+					tile[i][j].ChangeActor(Actor::Type::None);
 				}
 			}
 			else if (tile[i][j].actor.type == Actor::Type::Spike)
@@ -442,8 +442,7 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 						{
 							//we're on top of the enemy
 							//kill enemy(this is temport code until we give a proper death state thing)
-							tile[i][j].actor.type = Actor::Type::None;
-							tile[i][j].RefreshTile();
+							tile[i][j].ChangeActor(Actor::Type::None);
 						}
 						else
 						{

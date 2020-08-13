@@ -39,22 +39,22 @@ public:
 		{
 			std::cout << "Failed to load None.png";
 		}
-		if (!playerTexture.loadFromFile("SpritesPlatformer/Player.png"))
+		if (!playerTexture.loadFromFile("SpritesPlatformer/Player1.png"))
 		{
 			std::cout << "Failed to load Player.png";
-		}if (!enemyTexture.loadFromFile("SpritesPlatformer/EnemyAlive.png"))
+		}if (!enemyTexture.loadFromFile("SpritesPlatformer/EnemyAlive1.png"))
 		{
 			std::cout << "Failed to load EnemyAlive.png";
 		}
-		if (!coinTexture.loadFromFile("SpritesPlatformer/Coin.png"))
+		if (!coinTexture.loadFromFile("SpritesPlatformer/Coin1.png"))
 		{
 			std::cout << "Failed to load Coin.png";
 		}
-		if (!spikeTexture.loadFromFile("SpritesPlatformer/Spike.png"))
+		if (!spikeTexture.loadFromFile("SpritesPlatformer/Spike2.png"))
 		{
 			std::cout << "Failed to load Spike.png";
 		}
-		if (!doorTexture.loadFromFile("SpritesPlatformer/Door.png"))
+		if (!doorTexture.loadFromFile("SpritesPlatformer/Door1.png"))
 		{
 			std::cout << "Failed to load Door.png";
 		}
@@ -125,15 +125,15 @@ public:
 
 	void loadTextures()
 	{
-		if (!skyTexture.loadFromFile("SpritesPlatformer/BlockSky.png"))
+		if (!skyTexture.loadFromFile("SpritesPlatformer/BlockSky2.png"))
 		{
 			std::cout << "Failed to load BlockSky.png";
 		}
-		if (!platformTexture.loadFromFile("SpritesPlatformer/BlockPlatform.png"))
+		if (!platformTexture.loadFromFile("SpritesPlatformer/BlockPlatform1.png"))
 		{
 			std::cout << "Failed to load BlockPlatform.png";
 		}
-		if (!lavaTexture.loadFromFile("SpritesPlatformer/BlockLava.png"))
+		if (!lavaTexture.loadFromFile("SpritesPlatformer/BlockLava2.png"))
 		{
 			std::cout << "Failed to load BlockLava.png";
 		}
