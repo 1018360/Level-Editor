@@ -397,13 +397,15 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 					if (player.lives == 0)
 					{
 						//game over(todo - add gameover state/screen)
-						mainWindow.close();
+						std::cout << "Game Over!" << std::endl;
+						LoadLevel("You Lose.sav", tile);
+						//mainWindow.close();
 					}
 				}
 			}
 			else if (tile[i][j].actor.type == Actor::Type::Coin)
 			{
-				//add coin, then destroy the coin (changing type to none
+				//add coin, then destroy the coin (changing type to none)
 				Collision pcol = player.CollisionCheck(tile[i][j].actor.sprite.getGlobalBounds());
 				if (pcol.hit)
 				{
@@ -425,7 +427,9 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 					if (player.lives == 0)
 					{
 						//transition to our game over screen
-						mainWindow.close();
+						std::cout << "Game Over!" << std::endl;
+						LoadLevel("You Lose.sav", tile);
+						//mainWindow.close();
 					}
 				}
 			}
@@ -452,7 +456,9 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 							if (player.lives == 0)
 							{
 								//insert game over transition
-								mainWindow.close();
+								std::cout << "Game Over!" << std::endl;
+								LoadLevel("You Lose.sav", tile);
+								//mainWindow.close();
 							}
 						}
 					}
@@ -463,7 +469,9 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 						if (player.lives == 0)
 						{
 							//insert game over transition
-							mainWindow.close();
+							std::cout << "Game Over!" << std::endl;
+							LoadLevel("You Lose.sav", tile);
+							//mainWindow.close();
 						}
 					}
 				}
