@@ -9,18 +9,18 @@ D:\timmy\Documents\Level Editor\Platformer\Editor.h(507,21): warning C4018: '<':
 D:\timmy\Documents\Level Editor\Platformer\Editor.h(524,21): warning C4018: '<': signed/unsigned mismatch
 D:\timmy\Documents\Level Editor\Platformer\Editor.h(541,21): warning C4018: '<': signed/unsigned mismatch
 D:\timmy\Documents\Level Editor\Platformer\Editor.h(558,21): warning C4018: '<': signed/unsigned mismatch
-D:\timmy\Documents\Level Editor\Platformer\Source.cpp(14,21): warning C4129: '.': unrecognized character escape sequence
-D:\timmy\Documents\Level Editor\Platformer\Source.cpp(116,86): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+D:\timmy\Documents\Level Editor\Platformer\Source.cpp(17,21): warning C4129: '.': unrecognized character escape sequence
+D:\timmy\Documents\Level Editor\Platformer\Source.cpp(121,86): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-D:\timmy\Documents\Level Editor\Platformer\Source.cpp(118,81): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+D:\timmy\Documents\Level Editor\Platformer\Source.cpp(123,81): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
           with
           [
               T=float
           ]
-D:\timmy\Documents\Level Editor\Platformer\Source.cpp(118,57): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
+D:\timmy\Documents\Level Editor\Platformer\Source.cpp(123,57): warning C4244: 'argument': conversion from 'const int' to 'T', possible loss of data
           with
           [
               T=float

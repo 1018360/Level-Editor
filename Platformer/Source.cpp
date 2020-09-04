@@ -3,9 +3,12 @@
 #include "MenuHeader.h"
 #include "WindowHeader.h"
 #include "Game.h"
+#include "Audio.h"
 #include <experimental/filesystem>
 
+
 namespace fs = std::experimental::filesystem;
+
 
 std::vector<std::string> saves;
 int curLevel = 0;
@@ -30,6 +33,7 @@ int main()
 	MainMenu myMainMenu;
 	GameClass myGame;
 	MainRenderWindow mainWindow;
+	
 	
 	mainWindow.window.create(sf::VideoMode(mainWindow.windowWidth, mainWindow.windowHeight), "My Program", sf::Style::Titlebar | sf::Style::Close);
 
@@ -109,6 +113,7 @@ EditorClass::EditorClass()
 		tile[i] = new Tile[y];
 	}
 }
+
 
 bool EditorClass::Start(MainRenderWindow &mainWindow)
 {
@@ -262,6 +267,7 @@ bool GameClass::Start(MainRenderWindow& mainWindow)
 
 	player.nextPos = player.getPosition();
 	gameActive = true;
+	audioClass.playAudio();
 	return true;
 }
 
@@ -304,7 +310,18 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 		{
 			player.isGrounded = false;
 			player.velocity.y += -player.jumpSpeed + deltaTime;
+			audioClass.sound.setBuffer(audioClass.jumpSB);
+			audioClass.sound.play();
 		}
+		
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+	{
+		mainWindow.close();
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+	{
+		LoadLevel("Level1.sav", tile);
 	}
 
 	//friction
@@ -394,11 +411,13 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 					//reset position
 					player.Respawn();
 					std::cout << "Player hit lava" << std::endl;
+					audioClass.sound.setBuffer(audioClass.deathSB);
+					audioClass.sound.play();
 					if (player.lives == 0)
 					{
 						//game over(todo - add gameover state/screen)
 						std::cout << "Game Over!" << std::endl;
-						LoadLevel("You Lose.sav", tile);
+						LoadLevel("ZZZYou Lose.sav", tile);
 						//mainWindow.close();
 					}
 				}
@@ -412,6 +431,8 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 					std::cout << "Player Grabbed Coin!" << std::endl;
 					player.coins++;
 					tile[i][j].ChangeActor(Actor::Type::None);
+					audioClass.sound.setBuffer(audioClass.coinSB);
+					audioClass.sound.play();
 				}
 			}
 			else if (tile[i][j].actor.type == Actor::Type::Spike)
@@ -424,11 +445,13 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 					//reset position
 					player.Respawn();
 					std::cout << "Player hit spike" << std::endl;
+					audioClass.sound.setBuffer(audioClass.deathSB);
+					audioClass.sound.play();
 					if (player.lives == 0)
 					{
 						//transition to our game over screen
 						std::cout << "Game Over!" << std::endl;
-						LoadLevel("You Lose.sav", tile);
+						LoadLevel("ZZZYou Lose.sav", tile);
 						//mainWindow.close();
 					}
 				}
@@ -453,11 +476,13 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 							//enemy above
 							player.lives--;
 							player.Respawn();
+							audioClass.sound.setBuffer(audioClass.deathSB);
+							audioClass.sound.play();
 							if (player.lives == 0)
 							{
 								//insert game over transition
 								std::cout << "Game Over!" << std::endl;
-								LoadLevel("You Lose.sav", tile);
+								LoadLevel("ZZZYou Lose.sav", tile);
 								//mainWindow.close();
 							}
 						}
@@ -466,11 +491,13 @@ void GameClass::Update(MainRenderWindow& mainWindow)
 					{
 						player.lives--;
 						player.Respawn();
+						audioClass.sound.setBuffer(audioClass.deathSB);
+						audioClass.sound.play();
 						if (player.lives == 0)
 						{
 							//insert game over transition
 							std::cout << "Game Over!" << std::endl;
-							LoadLevel("You Lose.sav", tile);
+							LoadLevel("ZZZYou Lose.sav", tile);
 							//mainWindow.close();
 						}
 					}

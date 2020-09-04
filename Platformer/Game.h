@@ -1,5 +1,6 @@
 #pragma once
 #include "Editor.h"
+#include "Audio.h"
 
 struct Collision
 {
@@ -54,7 +55,7 @@ public:
 	bool gameActive = false;
 	static const int x = 30;
 	static const int y = 20;
-
+	AudioClass audioClass;
 	Player player;
 	//std::Vector<Enemy> enemies;
 
